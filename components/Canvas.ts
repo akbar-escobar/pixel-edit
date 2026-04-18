@@ -47,22 +47,24 @@ export class Canvas {
     drawing() {
         if (!this.ctx) return
         const ctx = this.ctx
-        const cond = this.state.toolCond
         let isMouse = false
 
         this.canvasEl.addEventListener("mousedown", (e) => {
             isMouse = true
             this.state.setCanvasMouseMoveXY(e.offsetX, e.offsetY)
-            if (cond === "brush") new Brush(this.state, ctx)
-            if (cond === "eraser") new Eraser(this.state, ctx)
+            if (this.state.toolCond === "brush")
+                new Brush(this.state, ctx)
+                    .draw(this.state.canvasMouseMoveXY.x, this.state.canvasMouseMoveXY.y)
+            if (this.state.toolCond === "eraser") new Eraser(this.state, ctx)
         })
 
         this.canvasEl.addEventListener("mousemove", (e) => {
             if (isMouse) {
-                console.log(cond)
                 this.state.setCanvasMouseMoveXY(e.offsetX, e.offsetY)
-                if (cond === "brush") new Brush(this.state, ctx)
-                if (cond === "eraser") new Eraser(this.state, ctx)
+                if (this.state.toolCond === "brush")
+                    new Brush(this.state, ctx)
+                        .draw(this.state.canvasMouseMoveXY.x, this.state.canvasMouseMoveXY.y)
+                if (this.state.toolCond === "eraser") new Eraser(this.state, ctx)
             }
         })
 
