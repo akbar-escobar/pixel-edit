@@ -8,17 +8,13 @@ export class State {
     canvasBackColB: string
     canvasMouseMoveXY: typeXY
 
-    mouseBool: boolean
+    horiBarW: number
+    horiBarPos: typeHoriBarPos
+    vertiBarH: number
+    vertiBarPos: typeVertiBarPos
 
-    toolsWH: typeWH
-    toolsXY: typeXY
-    toolsOptWH: typeWH
-    toolsOptXY: typeXY
-    toolsBackCol: string
-
+    tools: typeToolCond[]
     toolCond: typeToolCond
-    toolOptCond: typeToolOptCond
-
     brushWH: typeWH
     constructor() {
         const winIn = { w: window.innerWidth, h: window.innerHeight }
@@ -32,38 +28,31 @@ export class State {
         this.canvasBackColB = "#d3d3d3"
         this.canvasMouseMoveXY = { x: -1, y: -1 }
 
-        this.mouseBool = false
+        this.horiBarW = 50
+        this.horiBarPos = "left"
+        this.vertiBarH = 30
+        this.vertiBarPos = "bottom"
 
-        this.toolsWH = { w: winIn.w * 0.05, h: winIn.h }
-        this.toolsXY = { x: 0, y: 0 }
-        this.toolsOptWH = { w: winIn.w, h: winIn.h * 0.05 }
-        this.toolsOptXY = { x: this.toolsWH.w, y: winIn.h - this.toolsOptWH.h }
-        this.toolsBackCol = "#eeeeee"
-
+        this.tools = ["brush", "eraser"]
         this.toolCond = "brush"
-        this.toolOptCond = ""
 
         this.brushWH = { w: 1, h: 1 }
     }
 
     setCanvasMouseMoveXY(x: number, y: number) {
-        const { mathX, mathY } = this.returnMathRoundXY(x, y)
-        this.canvasMouseMoveXY = { x: mathX, y: mathY }
+        this.canvasMouseMoveXY = {
+            x: Math.round(x / this.canvasS - (this.brushWH.w / 2)),
+            y: Math.round(y / this.canvasS - (this.brushWH.h / 2))
+        }
     }
 
     setToolCond(cond: typeToolCond) {
         this.toolCond = cond
     }
-
-    returnMathRoundXY(x: number, y: number) {
-        return {
-            mathX: Math.round(x / this.canvasS - (this.brushWH.w / 2)),
-            mathY: Math.round(y / this.canvasS - (this.brushWH.h / 2))
-        }
-    }
 }
 
 type typeWH = { w: number, h: number }
 type typeXY = { x: number, y: number }
-type typeToolCond = "brush" | "erase"
-type typeToolOptCond = "" | "undo" | "redo" | "brushOpt"
+type typeToolCond = "brush" | "eraser"
+type typeHoriBarPos = "left" | "right"
+type typeVertiBarPos = "top" | "bottom"

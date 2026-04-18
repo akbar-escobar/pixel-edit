@@ -1,5 +1,6 @@
 import { State } from "../scripts/State"
 import { Brush } from "../scripts/tools/Brush"
+import { Eraser } from "../scripts/tools/Eraser"
 
 export class Canvas {
     canvasEl: HTMLCanvasElement
@@ -46,18 +47,27 @@ export class Canvas {
     drawing() {
         if (!this.ctx) return
         const ctx = this.ctx
+        const cond = this.state.toolCond
+        let isMouse = false
 
         this.canvasEl.addEventListener("mousedown", (e) => {
-            this.state.mouseBool = true
-            new Brush(this.state, ctx, e.offsetX, e.offsetY)
+            isMouse = true
+            this.state.setCanvasMouseMoveXY(e.offsetX, e.offsetY)
+            if (cond === "brush") new Brush(this.state, ctx)
+            if (cond === "eraser") new Eraser(this.state, ctx)
         })
 
         this.canvasEl.addEventListener("mousemove", (e) => {
-            if (this.state.mouseBool) new Brush(this.state, ctx, e.offsetX, e.offsetY)
+            if (isMouse) {
+                console.log(cond)
+                this.state.setCanvasMouseMoveXY(e.offsetX, e.offsetY)
+                if (cond === "brush") new Brush(this.state, ctx)
+                if (cond === "eraser") new Eraser(this.state, ctx)
+            }
         })
 
         document.addEventListener("mouseup", () => {
-            this.state.mouseBool = false
+            isMouse = false
             ctx.beginPath();
         })
     }
