@@ -43,15 +43,18 @@ export class HoriBar {
         const tools = ["undo", "redo", "colorPicker"]
         if (!this.ctx) return
         const ctx = this.ctx
+
+        const colorPicker = new ColorPicker(this.state)
+        let isClick = false
         for (let i = 0; i < tools.length; i++) {
             this.iconStyle(bckg[i])
-            if (tools[i] === "colorPicker") {
-                const pos = this.icon?.getBoundingClientRect()
-                if (pos) new ColorPicker(this.state)
-            }
             this.icon?.addEventListener("click", () => {
                 if (tools[i] === "undo") new Undo(this.state, ctx)
                 if (tools[i] === "redo") new Redo(this.state, ctx)
+                if (tools[i] === "colorPicker") {
+                    isClick = !isClick
+                    isClick ? colorPicker.add("none") : colorPicker.add("block")
+                }
             })
 
 
