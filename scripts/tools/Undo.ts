@@ -7,7 +7,7 @@ export class Undo {
         const erase = new Eraser(state, ctx)
 
         if (lastArr === undefined) return
-        state.setBrushStackCache(lastArr.x, lastArr.y, lastArr.col)
+        state.setBrushStackCache({ x: lastArr.x, y: lastArr.y, col: lastArr.col })
         erase.background(lastArr.x, lastArr.y)
     }
 }

@@ -1,3 +1,4 @@
+import { Parent } from "./components/Parent"
 import { Canvas } from "./components/Canvas"
 import { VertiBar } from "./components/VertiBar"
 import { HoriBar } from "./components/HoriBar"
@@ -5,12 +6,14 @@ import { State } from "./scripts/State"
 
 export class Main {
     state: State
+    parent: Parent
     canvas: Canvas
     horiBar: HoriBar
     vertiBar: VertiBar
     constructor() {
         this.state = new State()
-        this.canvas = new Canvas(this.state)
+        this.parent = new Parent()
+        this.canvas = new Canvas(this.state, this.parent)
         this.horiBar = new HoriBar(this.state, this.canvas)
         this.vertiBar = new VertiBar(this.state)
     }

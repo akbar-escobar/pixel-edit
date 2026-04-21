@@ -28,7 +28,7 @@ export class VertiBar {
     }
 
     icons() {
-        const bckg = ["green", "yellow"] // ex color
+        const bckg = ["green", "yellow", "blue"] // ex color
         const tools = this.state.tools
         for (let i = 0; i < tools.length; i++) {
             this.iconStyle(bckg[i])

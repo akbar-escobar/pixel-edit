@@ -40,7 +40,7 @@ export class State {
 
         this.colorPickerWH = { w: 500, h: 500 }
 
-        this.tools = ["brush", "eraser"]
+        this.tools = ["brush", "eraser", "pointer"]
         this.toolCond = "brush"
 
         this.brushWH = { w: 1, h: 1 }
@@ -72,9 +72,9 @@ export class State {
         ) stack.push({ x: x, y: y, col: col })
     }
 
-    setBrushStackCache(x: number, y: number, col: string) {
-        this.brushStackCache.push({ x: x, y: y, col: col })
-        console.log(this.brushStackCache)
+    setBrushStackCache({ cond = "add", x = 0, y = 0, col = "" }) {
+        if (cond === "add") this.brushStackCache.push({ x: x, y: y, col: col })
+        else this.brushStackCache = []
     }
 
     setToolCond(cond: typeToolCond) {
@@ -84,6 +84,6 @@ export class State {
 
 type typeWH = { w: number, h: number }
 type typeXY = { x: number, y: number }
-type typeToolCond = "brush" | "eraser"
+type typeToolCond = "brush" | "eraser" | "pointer"
 type typeVertiBarPos = "left" | "right"
 type typeHoriBarPos = "top" | "bottom"
