@@ -8,3 +8,5 @@ Right now this app still on development stages, so any future feature still rema
     [] add animation support
     [] finish the UI
     [] add more tools
+    [x] color pallet
+    [] fix undo redo

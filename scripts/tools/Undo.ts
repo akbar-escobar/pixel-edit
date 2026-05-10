@@ -1,13 +1,14 @@
 import type { State } from "../State";
-import { Eraser } from "./Eraser";
+// import { Brush } from "./Brush";
+// import { Eraser } from "./Eraser";
 
 export class Undo {
     constructor(state: State, ctx: CanvasRenderingContext2D) {
-        const lastArr = state.brushStack.pop()
-        const erase = new Eraser(state, ctx)
+        const stack = state.drawStack.pop()
+        // const stackB = state.drawStack[state.drawStack.length - 1]
+        if (!stack && ctx) return // TODO just for place
+        // state.setDrawStackCache(stack.x, stack.y, stack.col)
 
-        if (lastArr === undefined) return
-        state.setBrushStackCache({ x: lastArr.x, y: lastArr.y, col: lastArr.col })
-        erase.background(lastArr.x, lastArr.y)
+        console.log("Undo")
     }
 }

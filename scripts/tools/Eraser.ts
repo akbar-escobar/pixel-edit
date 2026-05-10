@@ -4,21 +4,28 @@ export class Eraser {
     ctx: CanvasRenderingContext2D
     state: State
     constructor(state: State, ctx: CanvasRenderingContext2D) {
-        const pos = state.canvasMouseMoveXY
         this.ctx = ctx
         this.state = state
-
-        // check
-        this.background(pos.x, pos.y)
     }
 
-    background(x: number, y: number) {
-        this.ctx.clearRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
-        if ((x + y) % 2 === 0) {
-            this.ctx.fillStyle = this.state.canvasBackColA
-            this.ctx.fillRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
-        }
+    erase(x: number, y: number) {
+        this.checkBackground(x, y)
     }
 
-    // TODO add something that check canvas behind 
+    checkBackground(x: number, y: number) {
+        if ((x + y) % 2 === 1) this.ctx.fillStyle = this.state.canvasBackColA
+        else this.ctx.fillStyle = this.state.canvasBackColB
+        this.ctx.fillRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
+    }
+
+    checkCol(x: number, y: number, col: string) {
+        if (col === "") {
+            for (const stack of this.state.drawStack) {
+                if (
+                    stack.x === x && stack.y === y
+                ) this.ctx.fillStyle = stack.col
+                this.ctx.fillRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
+            }
+        } else this.checkBackground(x, y)
+    }
 }

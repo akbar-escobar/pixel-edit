@@ -8,11 +8,9 @@ export class Brush {
         this.state = state
     }
 
-    draw(x: number, y: number) {
-        const col = this.state.brushCol
+    draw(x: number, y: number, col: string) {
         this.ctx.fillStyle = col
         this.ctx.fillRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
-        this.state.setBrushStack(x, y, col)
     }
 }
 

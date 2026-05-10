@@ -1,26 +1,24 @@
 export class State {
     ctxWH: typeWH
-
     canvasWH: typeWH
     canvasXY: typeXY
     canvasS: number
     canvasBackColA: string
     canvasBackColB: string
-    canvasMouseMoveXY: typeXY
-
-    horiBarW: number
-    horiBarPos: typeHoriBarPos
-    vertiBarH: number
-    vertiBarPos: typeVertiBarPos
-
+    drawMoveXY: typeXY
     colorPickerWH: typeWH
-
     tools: typeToolCond[]
     toolCond: typeToolCond
+    isMouse: boolean
     brushWH: typeWH
     brushCol: string
-    brushStack: { x: number, y: number, col: string }[]
-    brushStackCache: { x: number, y: number, col: string }[]
+    drawStack: typeStack[]
+    drawStackCache: typeStack[]
+    colorMenuCond: typeColorMenuCond
+    colorPallet: string[]
+    background: string
+    barSize: number
+    barPos: { colorPallet: string, toolsBar: string }
     constructor() {
         const winIn = { w: window.innerWidth, h: window.innerHeight }
 
@@ -31,59 +29,76 @@ export class State {
         this.canvasXY = { x: winIn.w / 2 - this.canvasWH.w / 2, y: winIn.h / 2 - this.canvasWH.h / 2 }
         this.canvasBackColA = "white"
         this.canvasBackColB = "#d3d3d3"
-        this.canvasMouseMoveXY = { x: -1, y: -1 }
+        this.drawMoveXY = { x: -1, y: -1 }
 
-        this.horiBarW = 50
-        this.horiBarPos = "bottom"
-        this.vertiBarH = 50
-        this.vertiBarPos = "left"
+        this.background = "#333333"
 
-        this.colorPickerWH = { w: 500, h: 500 }
+        this.barSize = 100
+        this.barPos = { colorPallet: "left", toolsBar: "bottom" }
+
+        this.colorPickerWH = { w: 500, h: 650 }
 
         this.tools = ["brush", "eraser", "pointer"]
         this.toolCond = "brush"
-
+        this.isMouse = false
         this.brushWH = { w: 1, h: 1 }
         this.brushCol = "rgb(0, 0, 0)"
-        this.brushStack = []
-        this.brushStackCache = []
+        this.drawStack = []
+        this.drawStackCache = []
+        this.colorMenuCond = "colorPicker"
+        this.colorPallet = []
     }
 
-    setCanvasMouseMoveXY(x: number, y: number) {
-        this.canvasMouseMoveXY = {
+    setDrawMoveXY(x: number, y: number) {
+        this.drawMoveXY = {
             x: Math.round(x / this.canvasS - (this.brushWH.w / 2)),
             y: Math.round(y / this.canvasS - (this.brushWH.h / 2))
         }
     }
 
     setBrushCol(col: string) {
-        this.brushCol = `rgb${col}`
+        this.brushCol = col
     }
 
-    setBrushStack(x: number, y: number, col: string) {
-        const stack = this.brushStack
+    setDrawStack(
+        x: number,
+        y: number,
+        col: string,
+    ) {
+        const stack = this.drawStack
         if (stack.length === 0) stack.push({ x: x, y: y, col: col })
         if (
-            (
-                stack[stack.length - 1].x !== x ||
-                stack[stack.length - 1].y !== y
-            ) ||
+            stack[stack.length - 1].x !== x ||
+            stack[stack.length - 1].y !== y ||
             stack[stack.length - 1].col !== col
         ) stack.push({ x: x, y: y, col: col })
     }
 
-    setBrushStackCache({ cond = "add", x = 0, y = 0, col = "" }) {
-        if (cond === "add") this.brushStackCache.push({ x: x, y: y, col: col })
-        else this.brushStackCache = []
-    }
+    // setDrawStackCache(
+    //     x: number,
+    //     y: number,
+    //     col: string,
+    // ) {
+    //     this.drawStackCache.push({ x: x, y: y, col: col })
+    // }
 
     setToolCond(cond: typeToolCond) {
         this.toolCond = cond
+    }
+
+    setColorMenuCond(cond: typeColorMenuCond) {
+        this.colorMenuCond = cond
+    }
+
+    setColorPallet(col: string) {
+        this.colorPallet.push(col)
     }
 }
 
 type typeWH = { w: number, h: number }
 type typeXY = { x: number, y: number }
+
+type typeStack = { x: number, y: number, col: string }
+
 type typeToolCond = "brush" | "eraser" | "pointer"
-type typeVertiBarPos = "left" | "right"
-type typeHoriBarPos = "top" | "bottom"
+type typeColorMenuCond = "colorPicker" | "colorPallet"
