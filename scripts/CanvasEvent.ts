@@ -14,8 +14,6 @@ export class CanvasEvent {
         this.state = state
         this.canvasEl = canvasEl
         this.parent = parent
-        this.isMove = false
-        this.type = { start: "", move: "", end: "" }
         this.event()
     }
 
@@ -31,7 +29,6 @@ export class CanvasEvent {
         })
 
         this.parent.addEventListener("touchmove", (e) => {
-            e.preventDefault()
             const me0 = { x: e.touches[0].clientX, y: e.touches[0].clientY }
             this.canvasEl.style.left = el.x + (
                 me0.x - se0.x
@@ -48,7 +45,13 @@ export class CanvasEvent {
                 if (dXY < 0 && scale > 0.1) scale -= 0.01
                 this.canvasEl.style.scale = `${scale}`
             }
+        })
 
+        this.canvasEl.addEventListener("touchstart", (e) => {
+            e.stopPropagation()
+        })
+        this.canvasEl.addEventListener("touchmove", (e) => {
+            e.stopPropagation()
         })
     }
 }

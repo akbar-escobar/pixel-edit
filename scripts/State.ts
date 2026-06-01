@@ -24,9 +24,8 @@ export class State {
 
         this.ctxWH = { w: 16, h: 16 }
 
-        this.canvasS = 30
+        this.canvasS = 45
         this.canvasWH = { w: this.ctxWH.w * this.canvasS, h: this.ctxWH.h * this.canvasS }
-        this.canvasXY = { x: winIn.w / 2 - this.canvasWH.w / 2, y: winIn.h / 2 - this.canvasWH.h / 2 }
         this.canvasBackColA = "white"
         this.canvasBackColB = "#d3d3d3"
         this.drawMoveXY = { x: -1, y: -1 }
