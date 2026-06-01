@@ -1,9 +1,8 @@
 import type { State } from "../scripts/State"
-import type { Body } from "./Body"
 import { ColorConverter } from "../scripts/ColorConverter"
+import "../Styles.css"
 
 export class PalletManager {
-    body: HTMLElement
     btn: HTMLInputElement
     parent: HTMLElement
     canvas: HTMLCanvasElement
@@ -18,9 +17,8 @@ export class PalletManager {
     newPalletP: HTMLElement
     palletMenuP: HTMLElement
     wh: { w: string, h: string }
-    constructor(state: State, body: Body) {
+    constructor(state: State) {
         this.state = state
-        this.body = body.zPos1
         this.btn = document.createElement("input")
         this.canvas = document.createElement("canvas")
         this.ctx = this.canvas.getContext("2d")
@@ -36,6 +34,9 @@ export class PalletManager {
 
         this.colorConverter = new ColorConverter()
         this.colFunc()
+        // this.parentStyle()
+        // this.newPalletBtn()
+        // this.palletPStyle()
     }
 
     set(cond: typeCond) {
@@ -46,14 +47,9 @@ export class PalletManager {
     }
 
     parentStyle() {
+        this.parent.classList.add("palletManager-parent")
         this.parent.style.visibility = this.cond
-        this.parent.style.backgroundColor = "green"
-        this.parent.style.display = "flex"
-        this.parent.style.flexDirection = "column"
-        this.parent.style.alignItems = "center"
-        this.parent.style.height = 70 + "%"
-        this.parent.style.width = 70 + "%"
-        this.body.appendChild(this.parent)
+        document.body.appendChild(this.parent)
     }
 
     newPalletBtn() {
@@ -126,6 +122,7 @@ export class PalletManager {
             if (s.color !== '') {
                 this.newPallet(col.h, col.s, col.l)
                 this.state.setColorPallet(`hsl(${col.h},${col.s}%,${col.l}%)`)
+                console.log(`"hsl(${col.h},${col.s}%,${col.l}%)",`)
             }
         }
     }

@@ -1,16 +1,16 @@
 import { State } from "../scripts/State"
-import { Body} from "./Body"
 import { Draw } from "../scripts/Draw"
+import "../Styles.css"
 import { CanvasEvent } from "../scripts/CanvasEvent"
 
 export class Canvas {
     canvasEl: HTMLCanvasElement
     ctx: CanvasRenderingContext2D | null
     state: State
-    bodyEl: HTMLElement
-    constructor(state: State, body: Body) {
+    parent: HTMLDivElement
+    constructor(state: State) {
         this.state = state
-        this.bodyEl = body.zMin1
+        this.parent = document.createElement("div")
         this.canvasEl = document.createElement("canvas")
         this.ctx = this.canvasEl.getContext("2d")
 
@@ -18,18 +18,20 @@ export class Canvas {
         this.background()
 
         new Draw(state, this.canvasEl, this.ctx!)
-        new CanvasEvent(state, this.canvasEl, this.bodyEl)
+        new CanvasEvent(state, this.canvasEl, this.parent)
     }
 
     style() {
-        this.canvasEl.style.position = "absolute"
-        this.canvasEl.style.right = `${this.state.canvasXY.x}px`
-        this.canvasEl.style.imageRendering = "pixelated"
+        this.parent.classList.add("canvas-parent")
+        document.body.appendChild(this.parent)
+
+        this.canvasEl.classList.add("canvas-canvasEl")
+        this.canvasEl.style.left = this.state.canvasXY.x + "px"
         this.canvasEl.style.width = this.state.canvasWH.w + "px"
         this.canvasEl.style.height = this.state.canvasWH.h + "px"
         this.canvasEl.width = this.state.ctxWH.w
         this.canvasEl.height = this.state.ctxWH.h
-        this.bodyEl.appendChild(this.canvasEl)
+        this.parent.appendChild(this.canvasEl)
     }
 
     background() {

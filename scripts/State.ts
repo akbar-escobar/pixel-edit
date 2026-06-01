@@ -46,7 +46,32 @@ export class State {
         this.drawStack = []
         this.drawStackCache = []
         this.colorMenuCond = "colorPicker"
-        this.colorPallet = []
+        this.colorPallet = [
+            "hsl(309,16%,17%)",
+            "hsl(321,26%,23%)",
+            "hsl(349,45%,32%)",
+            "hsl(3,37%,45%)",
+            "hsl(13,24%,45%)",
+            "hsl(16,20%,55%)",
+            "hsl(21,21%,63%)",
+            "hsl(14,14%,71%)",
+            "hsl(338,2%,79%)",
+            "hsl(2,16%,34%)",
+            "hsl(172,16%,36%)",
+            "hsl(63,11%,39%)",
+            "hsl(99,18%,49%)",
+            "hsl(56,17%,54%)",
+            "hsl(37,21%,67%)",
+            "hsl(159,17%,30%)",
+            "hsl(137,19%,39%)",
+            "hsl(148,18%,47%)",
+            "hsl(80,18%,46%)",
+            "hsl(94,7%,57%)",
+            "hsl(80,9%,68%)",
+            "hsl(305,22%,36%)",
+            "hsl(325,26%,45%)",
+            "hsl(346,12%,59%)"
+        ]
     }
 
     setDrawMoveXY(x: number, y: number) {
