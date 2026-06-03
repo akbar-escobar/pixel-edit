@@ -18,13 +18,10 @@ export class SaveImg {
             if (history.color === "") eraser.erase(history.x, history.y, false)
         }
 
-        cacheCanvas.toBlob((blob) => {
-            if (!blob) return
-            const url = URL.createObjectURL(blob)
-            const link = document.createElement("a")
-            link.href = url
-            link.download = `${Date.now()}.png`
-            link.click()
-        })
+        const link = document.createElement("a")
+        link.href = cacheCanvas.toDataURL("image/png")
+        link.download = `${Date.now()}.png`
+        document.body.appendChild(link)
+        link.click()
     }
 }
