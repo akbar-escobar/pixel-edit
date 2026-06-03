@@ -1,6 +1,7 @@
 import type { State } from "../scripts/State"
 import { Redo } from "../scripts/tools/Redo"
 import { Undo } from "../scripts/tools/Undo"
+import { SaveImg } from "../scripts/tools/SaveImg"
 import type { Canvas } from "./Canvas"
 import "../Styles.css"
 
@@ -8,10 +9,12 @@ export class ToolsBar {
     parent: HTMLElement
     state: State
     ctx: CanvasRenderingContext2D | null
+    brushOrEraserIcon: HTMLElement | null
     constructor(state: State, canvas: Canvas) {
         this.parent = document.createElement("div")
         this.state = state
         this.ctx = canvas.ctx
+        this.brushOrEraserIcon = null
 
         this.style()
         this.icons()
@@ -31,8 +34,8 @@ export class ToolsBar {
     }
 
     icons() {
-        const bckg = ["black", "green", "yellow", "red"] // ex color
-        const tools = ["brush/eraser", "undo", "redo", "colorPicker"]
+        const bckg = ["black", "green", "yellow", "purple"] // ex color
+        const tools = ["brush/eraser", "undo", "redo", "saveImg"]
         if (!this.ctx) return
         const ctx = this.ctx
 
@@ -47,7 +50,8 @@ export class ToolsBar {
                 if (tools[i] === "brush/eraser") {
                     if (isBrush) {
                         this.state.setToolCond("brush")
-                        icon.style.backgroundColor = "black"
+                        this.brushOrEraserIcon = icon
+                        this.brushOrEraserIcon.style.backgroundColor = "black"
                     }
                     else {
                         this.state.setToolCond("eraser")
@@ -57,6 +61,7 @@ export class ToolsBar {
                 }
                 if (tools[i] === "undo") new Undo(this.state, ctx)
                 if (tools[i] === "redo") new Redo(this.state, ctx)
+                if (tools[i] === "saveImg") new SaveImg(this.state)
             })
         }
     }

@@ -1,0 +1,92 @@
+{
+        let fillGap: { x: number, y: number }
+        const pos = this.state.ctxDrawXY(x, y)
+
+        if (this.prev.x !== -1 && this.prev.y !== -1) {
+            if (Math.abs(pos.x - this.prev.x) >= 2) {
+                fillGap = {
+                    x: this.prev.x + (pos.x - this.prev.x) - 1,
+                    y: pos.y
+                }
+                this.isFill = true
+            } else if (Math.abs(pos.y - this.prev.y) >= 2) {
+                fillGap = {
+                    x: pos.x,
+                    y: this.prev.y + (pos.y - this.prev.y) - 1
+                }
+                this.isFill = true
+            } else if (
+                Math.abs(pos.x - this.prev.x) >= 2 &&
+                Math.abs(pos.y - this.prev.y) >= 2
+            ) {
+                fillGap = {
+                    x: this.prev.x + (pos.x - this.prev.x) - 1,
+                    y: this.prev.y + (pos.y - this.prev.y) - 1
+                }
+                this.isFill = true
+            } else {
+                fillGap = { x: pos.x, y: pos.y }
+                this.isFill = false
+            }
+        } else fillGap = { x: pos.x, y: pos.y }
+        this.prev = { x: pos.x, y: pos.y }
+
+        if (this.state.toolCond === "brush") {
+            if (this.isFill) this.brush.draw(fillGap.x, fillGap.y, "orange")
+            else this.brush.draw(fillGap.x, fillGap.y, this.state.brushCol)
+        }
+
+        if (this.state.toolCond === "eraser") {
+            this.eraser.erase(pos.x, pos.y)
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+{
+        let arr: (
+            { x: number, y: number } |
+            { X: number, Y: number })[] = []
+        let prev: { x: number, y: number } = { x: -1, y: -1 }
+
+        this.canvasEl.addEventListener("touchmove", (e) => {
+            const client = this.state.canvasDrawXY(this.canvasEl, e.touches[0].clientX, e.touches[0].clientY)
+            this.Tools(client.x, client.y)
+            const pos = this.state.ctxDrawXY(client.x, client.y)
+
+            if (prev.x !== -1 && prev.y !== -1) {
+                if (Math.abs(pos.x - prev.x) >= 2) {
+                    arr.push({
+                        X: prev.x + (pos.x - prev.x) - 1,
+                        Y: pos.y
+                    })
+                } else if (Math.abs(pos.y - prev.y) >= 2) {
+                    arr.push({
+                        X: pos.x,
+                        Y: prev.y + (pos.y - prev.y) - 1
+                    })
+                } else {
+                    arr.push({
+                        X: prev.x + (pos.x - prev.x) - 1,
+                        Y: prev.y + (pos.y - prev.y) - 1
+                    })
+                }
+            }
+            arr.push({ x: pos.x, y: pos.y })
+            prev = { x: pos.x, y: pos.y }
+        })
+
+        document.addEventListener("touchend", () => {
+            this.ctx.beginPath()
+            console.log(arr)
+        })
+    }

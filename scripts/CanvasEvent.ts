@@ -1,8 +1,6 @@
 import { State } from "./State"
 
 export class CanvasEvent {
-    isMove: boolean
-    type: { start: string, move: string, end: string }
     canvasEl: HTMLCanvasElement
     state: State
     parent: HTMLDivElement

@@ -1,50 +1,41 @@
 export class State {
     ctxWH: typeWH
     canvasWH: typeWH
-    canvasXY: typeXY
     canvasS: number
     canvasBackColA: string
     canvasBackColB: string
-    drawMoveXY: typeXY
     colorPickerWH: typeWH
     tools: typeToolCond[]
     toolCond: typeToolCond
-    isMouse: boolean
     brushWH: typeWH
     brushCol: string
-    drawStack: typeStack[]
-    drawStackCache: typeStack[]
-    colorMenuCond: typeColorMenuCond
     colorPallet: string[]
     background: string
     barSize: number
     barPos: { colorPallet: string, toolsBar: string }
+    historyXY: { x: number, y: number, color: string }[]
+    // drawXY: { x: number, y: number, color: string | "" }
     constructor() {
         const winIn = { w: window.innerWidth, h: window.innerHeight }
 
+        this.barSize = 100
+        this.barPos = { colorPallet: "left", toolsBar: "bottom" }
+
         this.ctxWH = { w: 16, h: 16 }
 
-        this.canvasS = 45
+        this.canvasS = winIn.h < winIn.w ? (winIn.h - this.barSize) / this.ctxWH.h : (winIn.w - this.barSize) / this.ctxWH.w
         this.canvasWH = { w: this.ctxWH.w * this.canvasS, h: this.ctxWH.h * this.canvasS }
         this.canvasBackColA = "white"
         this.canvasBackColB = "#d3d3d3"
-        this.drawMoveXY = { x: -1, y: -1 }
 
         this.background = "#333333"
-
-        this.barSize = 100
-        this.barPos = { colorPallet: "left", toolsBar: "bottom" }
 
         this.colorPickerWH = { w: 500, h: 650 }
 
         this.tools = ["brush", "eraser", "pointer"]
         this.toolCond = "brush"
-        this.isMouse = false
         this.brushWH = { w: 1, h: 1 }
         this.brushCol = "rgb(0, 0, 0)"
-        this.drawStack = []
-        this.drawStackCache = []
-        this.colorMenuCond = "colorPicker"
         this.colorPallet = [
             "hsl(309,16%,17%)",
             "hsl(321,26%,23%)",
@@ -71,58 +62,48 @@ export class State {
             "hsl(325,26%,45%)",
             "hsl(346,12%,59%)"
         ]
-    }
 
-    setDrawMoveXY(x: number, y: number) {
-        this.drawMoveXY = {
-            x: Math.round(x / this.canvasS - (this.brushWH.w / 2)),
-            y: Math.round(y / this.canvasS - (this.brushWH.h / 2))
-        }
+        this.historyXY = []
     }
 
     setBrushCol(col: string) {
         this.brushCol = col
     }
 
-    setDrawStack(
-        x: number,
-        y: number,
-        col: string,
-    ) {
-        const stack = this.drawStack
-        if (stack.length === 0) stack.push({ x: x, y: y, col: col })
-        if (
-            stack[stack.length - 1].x !== x ||
-            stack[stack.length - 1].y !== y ||
-            stack[stack.length - 1].col !== col
-        ) stack.push({ x: x, y: y, col: col })
-    }
-
-    // setDrawStackCache(
-    //     x: number,
-    //     y: number,
-    //     col: string,
-    // ) {
-    //     this.drawStackCache.push({ x: x, y: y, col: col })
-    // }
-
     setToolCond(cond: typeToolCond) {
         this.toolCond = cond
     }
 
-    setColorMenuCond(cond: typeColorMenuCond) {
-        this.colorMenuCond = cond
-    }
-
     setColorPallet(col: string) {
         this.colorPallet.push(col)
+    }
+
+    canvasDrawXY(canvasEl: HTMLCanvasElement, eClientX: number, eClientY: number) {
+        const rect = canvasEl.getBoundingClientRect()
+        const scale = { x: rect.width / canvasEl.offsetWidth, y: rect.height / canvasEl.offsetHeight }
+        const roundX = Math.round((eClientX - rect.x) / scale.x)
+        const roundY = Math.round((eClientY - rect.y) / scale.y)
+        return {
+            x: roundX,
+            y: roundY
+        }
+    }
+
+    ctxDrawXY(x: number, y: number) {
+        const roundX = Math.round(x / this.canvasS - (this.brushWH.w / 2))
+        const roundY = Math.round(y / this.canvasS - (this.brushWH.h / 2))
+        return {
+            x: roundX,
+            y: roundY
+        }
+    }
+
+    setHistoryXY(x: number, y: number, color: string) {
+        this.historyXY.push({ x: x, y: y, color: color })
     }
 }
 
 type typeWH = { w: number, h: number }
 type typeXY = { x: number, y: number }
 
-type typeStack = { x: number, y: number, col: string }
-
 type typeToolCond = "brush" | "eraser" | "pointer"
-type typeColorMenuCond = "colorPicker" | "colorPallet"
