@@ -2,6 +2,7 @@ import type { State } from "../scripts/State";
 import { PalletManager } from "./PalletManager";
 import "../Styles.css"
 import { ToolsBar } from "./ToolsBar";
+import { ColorPicker } from "./ColorPicker";
 
 export class ColorPallet {
     parent: HTMLDivElement
@@ -9,12 +10,14 @@ export class ColorPallet {
     col: string
     isAddCol: boolean
     toolsBar: ToolsBar
-    constructor(state: State, toolsBar: ToolsBar) {
+    colorPicker: ColorPicker
+    constructor(state: State, toolsBar: ToolsBar, colorPicker: ColorPicker) {
         this.state = state
+        this.colorPicker = colorPicker
+        this.toolsBar = toolsBar
         this.parent = document.createElement("div")
         this.col = this.state.brushCol
         this.isAddCol = false
-        this.toolsBar = toolsBar
 
         this.style()
         this.icons()
@@ -47,13 +50,16 @@ export class ColorPallet {
                 icon.addEventListener("click", () => {
                     this.state.setBrushCol(this.state.colorPallet[i])
                     this.state.setToolCond("brush")
-                    this.toolsBar.brushOrEraserIcon!.style.backgroundColor = "black"
+                    this.toolsBar.brushOrEraserIcon!.style.backgroundColor = this.state.colorPallet[i]
                 })
             } else {
                 icon.textContent = "+"
-                icon.addEventListener("click", () => {
-                    // TODO: choose a new color
-                    // use ColorPicker and ColorManager 
+                icon.addEventListener("click", (e) => {
+                    const target = e.currentTarget as HTMLDivElement
+                    this.colorPicker.add("block")
+                    this.colorPicker.button((hsl) => {
+                        target.style.backgroundColor = hsl
+                    })
                 })
             }
         }

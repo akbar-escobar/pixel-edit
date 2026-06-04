@@ -34,7 +34,7 @@ export class ToolsBar {
     }
 
     icons() {
-        const bckg = ["black", "green", "yellow", "purple"] // ex color
+        const bckg = [this.state.brushCol, "green", "yellow", "purple"] // ex color
         const tools = ["brush/eraser", "undo", "redo", "saveImg"]
         if (!this.ctx) return
         const ctx = this.ctx
@@ -44,14 +44,14 @@ export class ToolsBar {
             const icon = document.createElement("div")
             icon.classList.add("toolsBar-icon")
             icon.style.backgroundColor = bckg[i]
+            if (tools[i] === "brush/eraser") this.brushOrEraserIcon = icon
             this.parent.appendChild(icon)
 
             icon.addEventListener("click", () => {
                 if (tools[i] === "brush/eraser") {
                     if (isBrush) {
                         this.state.setToolCond("brush")
-                        this.brushOrEraserIcon = icon
-                        this.brushOrEraserIcon.style.backgroundColor = "black"
+                        this.brushOrEraserIcon!.style.backgroundColor = this.state.brushCol
                     }
                     else {
                         this.state.setToolCond("eraser")

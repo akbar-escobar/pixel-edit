@@ -16,8 +16,8 @@ export class Main {
         this.state = new State()
         this.canvas = new Canvas(this.state)
         this.toolsBar = new ToolsBar(this.state, this.canvas)
-        this.colorPallet = new ColorPallet(this.state, this.toolsBar)
-        // this.colorPicker = new ColorPicker(this.state, this.colorPallet)
+        this.colorPicker = new ColorPicker(this.state)
+        this.colorPallet = new ColorPallet(this.state, this.toolsBar, this.colorPicker)
         // this.palletManager = new PalletManager(this.state)
     }
 }

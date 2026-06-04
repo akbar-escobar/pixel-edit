@@ -36,6 +36,95 @@ body {
     align-items: center;
 }
 
+.colorPicker-parent {
+    z-index: 1;
+    position: absolute;
+    background-color: purple;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    height: 70%;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    @media (orientation: portrait) {
+        width: 70%;
+    }
+
+    @media (orientation: landscape) {
+        width: 50%;
+    }
+}
+
+.colorPicker-colorWheelP {
+    width: 100%;
+    height: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.colorPicker-wheel {
+    background-color: white;
+    height: 100%;
+
+    @media (orientation: portrait) {
+        width: 70%;
+    }
+
+    @media (orientation: landscape) {
+        width: 60%;
+    }
+}
+
+.colorPicker-wheelSliders {
+    background-color: wheat;
+    height: 100%;
+    width: 10%;
+}
+
+.colorPicker-colorInputP {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.colorPicker-inp {
+    width: 60%;
+    height: 100%;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.colorPicker-lilCol {
+    width: 25%;
+    height: 100%;
+}
+
+.colorPicker-sliderP {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.colorPicker-hslSliders {
+    height: 20%;
+    width: 90%;
+    background-color: wheat;
+}
+
+.colorPicker-btn {
+    width: 50%;
+    height: 10%;
+    background-color: red;
+    align-self: center;
+}
+
 .palletManager-parent {
     background-color: green;
     display: flex;
@@ -60,6 +149,7 @@ body {
 
 .toolsBar-icon {
     /* flex: 0 0 auto; */
+    font-size: 10em;
     width: 20%;
     aspect-ratio: 1/1;
 }

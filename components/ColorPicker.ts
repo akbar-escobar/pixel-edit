@@ -1,5 +1,6 @@
 import { State } from "../scripts/State"
 import type { ColorPallet } from "./ColorPallet"
+import "../Styles.css"
 
 export class ColorPicker {
     state: State
@@ -8,8 +9,6 @@ export class ColorPicker {
     inp: HTMLInputElement
     lilCol: HTMLElement
     s: HTMLElement
-    cond: typeCond
-    colorPallet: ColorPallet
     btn: HTMLElement
     colorWheelP: HTMLElement
     colorInputP: HTMLElement
@@ -20,7 +19,10 @@ export class ColorPicker {
     colSlider: HTMLElement
     alphaSlider: HTMLElement
     sliderP: HTMLElement
-    constructor(state: State, colorPallet: ColorPallet) {
+    hsl: string
+    constructor(state: State) {
+        this.state = state
+        this.hsl = ""
         this.parent = document.createElement("div")
         this.wheel = document.createElement("canvas")
         this.colSlider = document.createElement("div")
@@ -36,52 +38,30 @@ export class ColorPicker {
         this.colorWheelP = document.createElement("div")
         this.colorInputP = document.createElement("div")
         this.buttonP = document.createElement("div")
-
-        this.cond = "none"
-        this.state = state
-        this.colorPallet = colorPallet
-    }
-
-    add(cond: typeCond) {
-        this.cond = cond
-        this.parentStyle()
         this.colorWheel()
         this.colorInput()
         this.slider()
-        this.button()
+        this.button(null)
     }
 
-    parentStyle() {
-        this.parent.style.display = this.cond
-        this.parent.style.backgroundColor = "purple"
-        this.parent.style.height = this.state.colorPickerWH.h + "px"
-        this.parent.style.width = this.state.colorPickerWH.w + "px"
-        this.parent.style.position = "absolute"
-        // this.parent.style.left = (this.state.horiBarW) + "px"
-        // this.parent.style.bottom = (this.state.vertiBarH) + "px"
+    add(cond: typeCond) {
+        this.parent.classList.add("colorPicker-parent")
         document.body.appendChild(this.parent)
+        this.parent.style.display = cond // remove flex
+        this.parent.style.display = "flex" // add flex
     }
 
     colorWheel() {
-        this.colorWheelP.style.width = "100%"
-        this.colorWheelP.style.height = "50%"
-        this.colorWheelP.style.display = "flex"
-        this.colorWheelP.style.alignItems = "center"
+        this.colorWheelP.classList.add("colorPicker-colorWheelP")
         this.parent.appendChild(this.colorWheelP)
 
-        this.wheel.style.backgroundColor = "white"
-        this.wheel.style.borderRadius = "50%"
-        this.wheel.style.width = "75%"
+        this.wheel.classList.add("colorPicker-wheel")
         this.colorWheelP.appendChild(this.wheel)
 
-        this.colSlider.style.backgroundColor = "green"
-        this.colSlider.style.height = "90%"
-        this.colSlider.style.width = "10%"
+        this.colSlider.classList.add("colorPicker-wheelSliders")
         this.colorWheelP.appendChild(this.colSlider)
 
-        this.alphaSlider.style.backgroundColor = "white"
-        this.alphaSlider.style.height = "90%"
-        this.alphaSlider.style.width = "10%"
+        this.alphaSlider.classList.add("colorPicker-wheelSliders")
         this.colorWheelP.appendChild(this.alphaSlider)
 
         const ctx = this.wheel.getContext("2d")
@@ -97,24 +77,15 @@ export class ColorPicker {
     }
 
     colorInput() {
-        this.colorInputP.style.width = "100%"
-        this.colorInputP.style.height = "10%"
-        this.colorInputP.style.display = "flex"
-        this.colorInputP.style.alignItems = "center"
-        this.colorInputP.style.justifyContent = "center"
+        this.colorInputP.classList.add("colorPicker-colorInputP")
         this.parent.appendChild(this.colorInputP)
 
-        this.inp.style.display = this.cond
-        this.inp.style.width = "30%"
-        this.inp.style.height = "80%"
-        this.inp.style.boxSizing = "border-box"
-        this.inp.style.fontSize = "24px"
+        // this.inp.style.boxSizing = "border-box"
+        this.inp.classList.add("colorPicker-inp")
+        this.inp.placeholder = "hsl"
         this.colorInputP.appendChild(this.inp)
 
-        this.lilCol.style.display = this.cond
-        this.lilCol.style.width = "10%"
-        this.lilCol.style.height = "80%"
-        this.lilCol.style.position = "relative"
+        this.lilCol.classList.add("colorPicker-lilCol")
         this.lilCol.style.backgroundColor = this.state.brushCol
         this.colorInputP.appendChild(this.lilCol)
 
@@ -122,50 +93,58 @@ export class ColorPicker {
             const s = this.s.style
             s.color = this.inp.value
             if (s.color !== '') {
-                this.state.setBrushCol(this.inp.value)
+                this.hsl = this.inp.value
                 this.lilCol.style.backgroundColor = this.state.brushCol
             }
         })
     }
 
     slider() {
-        this.sliderP.style.width = "100%"
-        this.sliderP.style.height = "30%"
-        this.sliderP.style.justifyItems = "center"
-        this.sliderP.style.alignContent = "center"
+        this.sliderP.classList.add("colorPicker-sliderP")
         this.parent.appendChild(this.sliderP)
+        let h = "180", s = "50", l = "50"
 
-        this.RSlider.style.backgroundColor = "red"
-        this.RSlider.style.height = "15%"
-        this.RSlider.style.width = "90%"
-        this.sliderP.appendChild(this.RSlider)
-
-        this.GSlider.style.backgroundColor = "green"
-        this.GSlider.style.height = "15%"
-        this.GSlider.style.width = "90%"
-        this.sliderP.appendChild(this.GSlider)
-
-        this.BSlider.style.backgroundColor = "blue"
-        this.BSlider.style.height = "15%"
-        this.BSlider.style.width = "90%"
-        this.sliderP.appendChild(this.BSlider)
+        for (let i = 0; i < 3; i++) {
+            const hslSlider = document.createElement("input")
+            hslSlider.type = "range"
+            hslSlider.min = "0"
+            hslSlider.max = "100"
+            hslSlider.value = "50"
+            hslSlider.classList.add("colorPicker-hslSliders")
+            if (i === 0) {
+                hslSlider.max = "360"
+                hslSlider.value = h
+                hslSlider.addEventListener("input", () => {
+                    h = hslSlider.value
+                })
+            }
+            else if (i === 1) {
+                hslSlider.addEventListener("input", () => {
+                    s = hslSlider.value
+                })
+            } else {
+                hslSlider.addEventListener("input", () => {
+                    l = hslSlider.value
+                })
+            }
+            hslSlider.addEventListener("input", () => {
+                this.lilCol.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`
+                this.inp.value = `hsl(${h}, ${s}%, ${l}%)`
+                this.hsl = `hsl(${h}, ${s}%, ${l}%)`
+            })
+            this.sliderP.appendChild(hslSlider)
+        }
     }
 
-    button() {
-        this.buttonP.style.width = "100%"
-        this.buttonP.style.height = "10%"
-        this.buttonP.style.justifyItems = "center"
-        this.buttonP.style.alignContent = "center"
-        this.parent.appendChild(this.buttonP)
+    button(onClick: (hsl: string) => void | null) {
+        this.btn.classList.add("colorPicker-btn")
+        this.parent.appendChild(this.btn)
 
-        this.btn.style.width = "30%"
-        this.btn.style.height = "80%"
-        this.btn.style.backgroundColor = "red"
-        this.btn.textContent = "biiji"
-        this.buttonP.appendChild(this.btn)
-
+        if (!onClick) return
         this.btn.addEventListener("click", () => {
-            this.colorPallet.setCol(this.inp.value)
+            this.parent.style.display = "none"
+            this.state.setBrushCol(this.hsl)
+            onClick(this.hsl)
         })
     }
 }

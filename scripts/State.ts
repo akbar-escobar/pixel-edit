@@ -21,7 +21,7 @@ export class State {
         this.barSize = 100
         this.barPos = { colorPallet: "left", toolsBar: "bottom" }
 
-        this.ctxWH = { w: 16, h: 16 }
+        this.ctxWH = { w: 16, h: 19 }
 
         this.canvasS = winIn.h < winIn.w ? (winIn.h - this.barSize) / this.ctxWH.h : (winIn.w - this.barSize) / this.ctxWH.w
         this.canvasWH = { w: this.ctxWH.w * this.canvasS, h: this.ctxWH.h * this.canvasS }
@@ -37,6 +37,9 @@ export class State {
         this.brushWH = { w: 1, h: 1 }
         this.brushCol = "rgb(0, 0, 0)"
         this.colorPallet = [
+            "hsl(0,25%,25%)",
+            "hsl(0,65%,85%)",
+            "hsl(0,0%,100%)",
             "hsl(309,16%,17%)",
             "hsl(321,26%,23%)",
             "hsl(349,45%,32%)",
