@@ -1,6 +1,7 @@
 import { State } from "../scripts/State"
 import type { ColorPallet } from "./ColorPallet"
 import "../Styles.css"
+import { ToolsBar } from "./ToolsBar"
 
 export class ColorPicker {
     state: State
@@ -19,10 +20,16 @@ export class ColorPicker {
     colSlider: HTMLElement
     alphaSlider: HTMLElement
     sliderP: HTMLElement
+    sliderHSL: { h: string, s: string, l: string }
     hsl: string
-    constructor(state: State) {
+    toolsBar
+    hslSliders: HTMLInputElement[]
+    constructor(state: State, toolsBar: ToolsBar) {
         this.state = state
-        this.hsl = ""
+        this.toolsBar = toolsBar
+        this.hsl = state.brushCol
+        this.hslSliders = []
+        this.sliderHSL = { h: "180", s: "50", l: "50" }
         this.parent = document.createElement("div")
         this.wheel = document.createElement("canvas")
         this.colSlider = document.createElement("div")
@@ -41,7 +48,7 @@ export class ColorPicker {
         this.colorWheel()
         this.colorInput()
         this.slider()
-        this.button(null)
+        this.button()
     }
 
     add(cond: typeCond) {
@@ -94,7 +101,11 @@ export class ColorPicker {
             s.color = this.inp.value
             if (s.color !== '') {
                 this.hsl = this.inp.value
-                this.lilCol.style.backgroundColor = this.state.brushCol
+                const hslMatch = this.inp.value.match(/\d+(?:\.\d+)?/g)
+                this.lilCol.style.backgroundColor = this.inp.value
+                this.hslSliders[0].value = hslMatch![0]
+                this.hslSliders[1].value = hslMatch![1]
+                this.hslSliders[2].value = hslMatch![2]
             }
         })
     }
@@ -102,10 +113,10 @@ export class ColorPicker {
     slider() {
         this.sliderP.classList.add("colorPicker-sliderP")
         this.parent.appendChild(this.sliderP)
-        let h = "180", s = "50", l = "50"
 
         for (let i = 0; i < 3; i++) {
             const hslSlider = document.createElement("input")
+            this.hslSliders.push(hslSlider)
             hslSlider.type = "range"
             hslSlider.min = "0"
             hslSlider.max = "100"
@@ -113,39 +124,43 @@ export class ColorPicker {
             hslSlider.classList.add("colorPicker-hslSliders")
             if (i === 0) {
                 hslSlider.max = "360"
-                hslSlider.value = h
+                hslSlider.value = this.sliderHSL.h
                 hslSlider.addEventListener("input", () => {
-                    h = hslSlider.value
+                    this.sliderHSL.h = hslSlider.value
                 })
             }
             else if (i === 1) {
                 hslSlider.addEventListener("input", () => {
-                    s = hslSlider.value
+                    this.sliderHSL.s = hslSlider.value
                 })
             } else {
                 hslSlider.addEventListener("input", () => {
-                    l = hslSlider.value
+                    this.sliderHSL.l = hslSlider.value
                 })
             }
             hslSlider.addEventListener("input", () => {
-                this.lilCol.style.backgroundColor = `hsl(${h}, ${s}%, ${l}%)`
-                this.inp.value = `hsl(${h}, ${s}%, ${l}%)`
-                this.hsl = `hsl(${h}, ${s}%, ${l}%)`
+                const hsl = `hsl(${this.sliderHSL.h}, ${this.sliderHSL.s}%, ${this.sliderHSL.l}%)`
+                this.lilCol.style.backgroundColor = hsl
+                this.inp.value = hsl
+                this.hsl = hsl
             })
             this.sliderP.appendChild(hslSlider)
         }
     }
 
-    button(onClick: (hsl: string) => void | null) {
+    button() {
         this.btn.classList.add("colorPicker-btn")
         this.parent.appendChild(this.btn)
+    }
 
+    eventBtn(onClick: (hsl: string) => void) {
         if (!onClick) return
-        this.btn.addEventListener("click", () => {
+        this.btn.onclick = () => {
             this.parent.style.display = "none"
             this.state.setBrushCol(this.hsl)
+            this.toolsBar.brushOrEraserIcon!.style.backgroundColor = this.hsl
             onClick(this.hsl)
-        })
+        }
     }
 }
 

@@ -15,12 +15,9 @@ export class ToolsBar {
         this.state = state
         this.ctx = canvas.ctx
         this.brushOrEraserIcon = null
-
-        this.style()
-        this.icons()
     }
 
-    style() {
+   create() {
         this.parent.classList.add("toolsBar-parent")
         this.parent.style.height = this.state.barSize + "px"
 
@@ -31,6 +28,8 @@ export class ToolsBar {
         else this.parent.style.top = 0 + "px"
 
         document.body.appendChild(this.parent)
+
+        this.icons()
     }
 
     icons() {

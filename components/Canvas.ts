@@ -14,14 +14,11 @@ export class Canvas {
         this.canvasEl = document.createElement("canvas")
         this.ctx = this.canvasEl.getContext("2d")
 
-        this.style()
-        this.background()
-
         new CtxEvent(state, this.canvasEl, this.ctx!)
         new CanvasEvent(state, this.canvasEl, this.parent)
     }
 
-    style() {
+    create() {
         this.parent.classList.add("canvas-parent")
         document.body.appendChild(this.parent)
 
@@ -42,6 +39,8 @@ export class Canvas {
         this.canvasEl.width = this.state.ctxWH.w
         this.canvasEl.height = this.state.ctxWH.h
         this.parent.appendChild(this.canvasEl)
+
+        this.background()
     }
 
     background() {
