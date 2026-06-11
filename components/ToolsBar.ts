@@ -1,6 +1,6 @@
 import type { State } from "../scripts/State"
-import { Redo } from "../scripts/tools/Redo"
-import { Undo } from "../scripts/tools/Undo"
+// import { Redo } from "../scripts/tools/Redo"
+// import { Undo } from "../scripts/tools/Undo"
 import { SaveImg } from "../scripts/tools/SaveImg"
 import type { Canvas } from "./Canvas"
 import "../Styles.css"
@@ -19,7 +19,7 @@ export class ToolsBar {
 
    create() {
         this.parent.classList.add("toolsBar-parent")
-        this.parent.style.height = this.state.barSize + "px"
+        this.parent.style.height = this.state.barWH.h + "px"
 
         // if (this.state.barPos.colorPallet === "left") this.parent.style.left = this.state.barSize + "px"
         // else this.parent.style.left = 0 + "px"
@@ -36,7 +36,7 @@ export class ToolsBar {
         const bckg = [this.state.brushCol, "green", "yellow", "purple"] // ex color
         const tools = ["brush/eraser", "undo", "redo", "saveImg"]
         if (!this.ctx) return
-        const ctx = this.ctx
+        // const ctx = this.ctx
 
         let isBrush = false
         for (let i = 0; i < tools.length; i++) {
@@ -58,8 +58,8 @@ export class ToolsBar {
                     }
                     isBrush = !isBrush
                 }
-                if (tools[i] === "undo") new Undo(this.state, ctx)
-                if (tools[i] === "redo") new Redo(this.state, ctx)
+                // if (tools[i] === "undo") new Undo(this.state, ctx)
+                // if (tools[i] === "redo") new Redo(this.state, ctx)
                 if (tools[i] === "saveImg") new SaveImg(this.state)
             })
         }

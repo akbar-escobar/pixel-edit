@@ -1,5 +1,5 @@
 import type { State } from "../scripts/State";
-import { PalletManager } from "./PalletManager";
+// import { PalletManager } from "./PalletManager";
 import "../Styles.css"
 import { ToolsBar } from "./ToolsBar";
 import { ColorPicker } from "./ColorPicker";
@@ -18,7 +18,7 @@ export class ColorPallet {
 
     create() {
         this.parent.classList.add("colorPallet-parent")
-        this.parent.style.width = this.state.barSize + "px"
+        this.parent.style.width = this.state.barWH.w + "px"
         this.parent.style.backgroundColor = this.state.background
 
         if (this.state.barPos.colorPallet === "left") this.parent.style.left = 0 + "px"

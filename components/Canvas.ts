@@ -23,18 +23,18 @@ export class Canvas {
         document.body.appendChild(this.parent)
 
         const canWH = {
-            w: this.state.ctxWH.w * (window.innerWidth - this.state.barSize) / this.state.ctxWH.w,
-            h: this.state.ctxWH.h * (window.innerHeight - this.state.barSize) / this.state.ctxWH.h
+            w: this.state.ctxWH.w * (window.innerWidth - this.state.barWH.w) / this.state.ctxWH.w,
+            h: this.state.ctxWH.h * (window.innerHeight - this.state.barWH.h) / this.state.ctxWH.h
         }
         this.canvasEl.classList.add("canvas-canvasEl")
         this.canvasEl.style.width = this.state.canvasWH.w + "px"
         this.canvasEl.style.height = this.state.canvasWH.h + "px"
         if (canWH.w < canWH.h) {
             this.canvasEl.style.right = 0 + "px"
-            this.canvasEl.style.top = (window.innerHeight / 2 - canWH.w / 2 - this.state.barSize / 2) + "px"
+            this.canvasEl.style.top = (window.innerHeight / 2 - canWH.w / 2 - this.state.barWH.w/ 2) + "px"
         }
         else {
-            this.canvasEl.style.left = (window.innerWidth / 2 - canWH.h / 2 + this.state.barSize / 2) + "px"
+            this.canvasEl.style.left = (window.innerWidth / 2 - canWH.h / 2 + this.state.barWH.h / 2) + "px"
         }
         this.canvasEl.width = this.state.ctxWH.w
         this.canvasEl.height = this.state.ctxWH.h

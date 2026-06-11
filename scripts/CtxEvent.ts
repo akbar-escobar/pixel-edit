@@ -11,6 +11,7 @@ export class CtxEvent {
     prev: { x: number, y: number } | undefined
     isFill: boolean
     dXY: { x: number, y: number }
+    lerp: { x: number, y: number }
     constructor(
         state: State,
         canvasEl: HTMLCanvasElement,
@@ -24,33 +25,42 @@ export class CtxEvent {
         this.prev = undefined
         this.isFill = false
         this.dXY = { x: -1, y: -1 }
+        this.lerp = { x: -1, y: -1 }
         this.event()
     }
 
     event() {
         this.canvasEl.addEventListener("pointermove", (e) => {
-            const client = this.state.canvasDrawXY(this.canvasEl, e.clientX, e.clientY)
-            this.Tools(client.x, client.y)
+            const drawXY = this.state.drawXY(this.canvasEl, e.clientX, e.clientY)
+            this.lerpFunc(drawXY)
+        })
+
+        document.body.addEventListener("pointerup", () => {
+            this.prev = undefined
+            this.dXY = { x: -1, y: -1 }
+            this.lerp = { x: -1, y: -1 }
         })
     }
 
-    Tools(x: number, y: number) {
-        const pos = this.state.ctxDrawXY(x, y)
+    lerpFunc(drawXY: { x: number, y: number }) {
+        if (this.prev === undefined) this.prev = { x: drawXY.x, y: drawXY.y }
+        this.dXY = { x: drawXY.x - this.prev.x, y: drawXY.y - this.prev.y }
+        let t = 0
+        while (t <= 1) {
+            this.lerp = { x: this.prev.x + this.dXY.x * t, y: this.prev.y + this.dXY.y * t }
+            this.tools(Math.round(this.lerp.x), Math.round(this.lerp.y))
+            t += 0.1
+        }
+        this.prev = { x: drawXY.x, y: drawXY.y }
+    }
 
-        // if (this.prev === undefined) this.prev = { x: pos.x, y: pos.y }
-        // this.dXY = { x: pos.x - this.prev.x, y: pos.y - this.prev.y }
-        //
-        // const t = 0.5
-        // const lerp = { x: this.prev.x + t * this.dXY.x, y: this.prev.y + t * this.dXY.y }
-        //
-        // console.log("d", this.dXY.x, this.dXY.y, "p", pos.x, pos.y)
-
+    tools(x: number, y: number) {
         if (this.state.toolCond === "brush") {
-            this.brush.draw(pos.x, pos.y, this.state.brushCol)
+            this.brush.draw(x, y, this.state.brushCol)
         }
 
         if (this.state.toolCond === "eraser") {
-            this.eraser.erase(pos.x, pos.y)
+            this.eraser.erase(x, y)
         }
     }
 }

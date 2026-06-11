@@ -1,5 +1,5 @@
 import { State } from "../scripts/State"
-import type { ColorPallet } from "./ColorPallet"
+// import type { ColorPallet } from "./ColorPallet"
 import "../Styles.css"
 import { ToolsBar } from "./ToolsBar"
 

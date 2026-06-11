@@ -3,7 +3,7 @@ import { ColorPallet } from "./components/ColorPallet"
 import { State } from "./scripts/State"
 import { ColorPicker } from "./components/ColorPicker"
 import { ToolsBar } from "./components/ToolsBar"
-import { PalletManager } from "./components/PalletManager"
+// import { PalletManager } from "./components/PalletManager"
 
 export class Main {
     state: State
@@ -11,7 +11,6 @@ export class Main {
     toolsBar: ToolsBar
     colorPallet: ColorPallet
     colorPicker: ColorPicker
-    palletManager: PalletManager
     constructor() {
         this.state = new State()
         this.canvas = new Canvas(this.state)

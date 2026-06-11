@@ -11,19 +11,18 @@ export class State {
     brushCol: string
     colorPallet: string[]
     background: string
-    barSize: number
+    barWH: typeWH
     barPos: { colorPallet: string, toolsBar: string }
     historyXY: { x: number, y: number, color: string }[]
-    // drawXY: { x: number, y: number, color: string | "" }
     constructor() {
         const winIn = { w: window.innerWidth, h: window.innerHeight }
 
-        this.barSize = 70
+        this.barWH = { w: 70, h: 45 }
         this.barPos = { colorPallet: "left", toolsBar: "bottom" }
 
         this.ctxWH = { w: 16, h: 19 }
 
-        this.canvasS = winIn.h < winIn.w ? (winIn.h - this.barSize) / this.ctxWH.h : (winIn.w - this.barSize) / this.ctxWH.w
+        this.canvasS = winIn.h < winIn.w ? (winIn.h - this.barWH.h) / this.ctxWH.h : (winIn.w - this.barWH.w) / this.ctxWH.w
         this.canvasWH = { w: this.ctxWH.w * this.canvasS, h: this.ctxWH.h * this.canvasS }
         this.canvasBackColA = "white"
         this.canvasBackColB = "#d3d3d3"
@@ -75,12 +74,25 @@ export class State {
         }
     }
 
+    drawXY(canvasEl: HTMLCanvasElement, eClientX: number, eClientY: number) {
+        const rect = canvasEl.getBoundingClientRect()
+        const scale = { x: rect.width / canvasEl.offsetWidth, y: rect.height / canvasEl.offsetHeight }
+        const canvasRoundX = Math.round((eClientX - rect.x) / scale.x)
+        const canvasRoundY = Math.round((eClientY - rect.y) / scale.y)
+        const ctxRoundX = Math.round(canvasRoundX / this.canvasS - (this.brushWH.w / 2))
+        const ctxRoundY = Math.round(canvasRoundY / this.canvasS - (this.brushWH.h / 2))
+        return {
+            x: ctxRoundX,
+            y: ctxRoundY
+        }
+    }
+
     setHistoryXY(x: number, y: number, color: string) {
         this.historyXY.push({ x: x, y: y, color: color })
     }
 }
 
 type typeWH = { w: number, h: number }
-type typeXY = { x: number, y: number }
+// type typeXY = { x: number, y: number }
 
 type typeToolCond = "brush" | "eraser" | "pointer"
