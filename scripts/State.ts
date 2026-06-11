@@ -13,7 +13,9 @@ export class State {
     background: string
     barWH: typeWH
     barPos: { colorPallet: string, toolsBar: string }
-    historyXY: { x: number, y: number, color: string }[]
+    prevStroke: { x: number, y: number, color: string }
+    stroke: { x: number, y: number, color: string }[]
+    history: typeof this.stroke[]
     constructor() {
         const winIn = { w: window.innerWidth, h: window.innerHeight }
 
@@ -39,7 +41,9 @@ export class State {
             "hsl(0,25%,25%)"
         ]
 
-        this.historyXY = []
+        this.prevStroke = { x: -1, y: -1, color: "" }
+        this.history = []
+        this.stroke = []
     }
 
     setBrushCol(col: string) {
@@ -87,8 +91,20 @@ export class State {
         }
     }
 
-    setHistoryXY(x: number, y: number, color: string) {
-        this.historyXY.push({ x: x, y: y, color: color })
+    setStroke(x: number, y: number, color: string) {
+        if (
+            (this.prevStroke.x !== x) ||
+            (this.prevStroke.y !== y) ||
+            (this.prevStroke.color !== color)
+        ) this.stroke.push({ x: x, y: y, color: color })
+
+        this.prevStroke = { x: x, y: y, color: color }
+    }
+
+    setHistory() {
+        if (this.stroke.length > 0) this.history.push(this.stroke)
+        this.stroke = []
+        this.prevStroke = { x: -1, y: -1, color: "" }
     }
 }
 

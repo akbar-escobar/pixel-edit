@@ -1,6 +1,6 @@
 import { State } from "../State"
-import { Brush } from "./Brush"
-import { Eraser } from "./Eraser"
+// import { Brush } from "./Brush"
+// import { Eraser } from "./Eraser"
 
 export class SaveImg {
     constructor(state: State) {
@@ -10,13 +10,14 @@ export class SaveImg {
         cacheCanvas.height = state.ctxWH.h
 
         if (!cacheCtx) return
-        const brush = new Brush(state, cacheCtx)
-        const eraser = new Eraser(state, cacheCtx)
+        // const brush = new Brush(state, cacheCtx)
+        // const eraser = new Eraser(state, cacheCtx)
 
-        for (const history of state.historyXY) {
-            brush.draw(history.x, history.y, history.color, false)
-            if (history.color === "") eraser.erase(history.x, history.y, false)
-        }
+        // TODO make it work using lerppppp
+        // for (const history of state.history) {
+        //     brush.draw(history.x, history.y)
+        //     if (history.color === "") eraser.erase(history.x, history.y, false)
+        // }
 
         const link = document.createElement("a")
         link.href = cacheCanvas.toDataURL("image/png")

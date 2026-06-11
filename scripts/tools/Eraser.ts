@@ -8,10 +8,9 @@ export class Eraser {
         this.state = state
     }
 
-    erase(x: number, y: number, setHistoryXY = true) {
+    erase(x: number, y: number) {
         this.ctx.clearRect(x, y, this.state.brushWH.w, this.state.brushWH.h)
-        if (setHistoryXY) this.checkBackground(x, y)
-        if (setHistoryXY) this.state.setHistoryXY(x, y, "")
+         this.checkBackground(x, y)
     }
 
     checkBackground(x: number, y: number) {

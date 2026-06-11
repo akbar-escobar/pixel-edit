@@ -32,26 +32,34 @@ export class CtxEvent {
     event() {
         this.canvasEl.addEventListener("pointermove", (e) => {
             const drawXY = this.state.drawXY(this.canvasEl, e.clientX, e.clientY)
-            this.lerpFunc(drawXY)
+            this.lerpFunc(drawXY.x, drawXY.y, (lerp) => {
+                this.tools(lerp.x, lerp.y)
+            })
+            // this.tools(drawXY.x, drawXY.y)
+            this.state.setStroke(drawXY.x, drawXY.y, this.state.brushCol)
         })
 
         document.body.addEventListener("pointerup", () => {
             this.prev = undefined
             this.dXY = { x: -1, y: -1 }
             this.lerp = { x: -1, y: -1 }
+            this.state.setHistory()
         })
     }
 
-    lerpFunc(drawXY: { x: number, y: number }) {
-        if (this.prev === undefined) this.prev = { x: drawXY.x, y: drawXY.y }
-        this.dXY = { x: drawXY.x - this.prev.x, y: drawXY.y - this.prev.y }
+    lerpFunc(x: number, y: number, callback: (lerp: { x: number, y: number }) => void) {
+        if (this.prev === undefined) this.prev = { x: x, y: y }
+        this.dXY = { x: x - this.prev.x, y: y - this.prev.y }
         let t = 0
         while (t <= 1) {
-            this.lerp = { x: this.prev.x + this.dXY.x * t, y: this.prev.y + this.dXY.y * t }
-            this.tools(Math.round(this.lerp.x), Math.round(this.lerp.y))
+            this.lerp = {
+                x: Math.round(this.prev.x + this.dXY.x * t),
+                y: Math.round(this.prev.y + this.dXY.y * t)
+            }
+            callback(this.lerp)
             t += 0.1
         }
-        this.prev = { x: drawXY.x, y: drawXY.y }
+        this.prev = { x: x, y: y }
     }
 
     tools(x: number, y: number) {

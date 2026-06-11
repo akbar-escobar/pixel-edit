@@ -8,13 +8,14 @@ export class Canvas {
     ctx: CanvasRenderingContext2D | null
     state: State
     parent: HTMLDivElement
+    ctxEvent: CtxEvent
     constructor(state: State) {
         this.state = state
         this.parent = document.createElement("div")
         this.canvasEl = document.createElement("canvas")
         this.ctx = this.canvasEl.getContext("2d")
 
-        new CtxEvent(state, this.canvasEl, this.ctx!)
+        this.ctxEvent = new CtxEvent(state, this.canvasEl, this.ctx!)
         new CanvasEvent(state, this.canvasEl, this.parent)
     }
 
@@ -31,7 +32,7 @@ export class Canvas {
         this.canvasEl.style.height = this.state.canvasWH.h + "px"
         if (canWH.w < canWH.h) {
             this.canvasEl.style.right = 0 + "px"
-            this.canvasEl.style.top = (window.innerHeight / 2 - canWH.w / 2 - this.state.barWH.w/ 2) + "px"
+            this.canvasEl.style.top = (window.innerHeight / 2 - canWH.w / 2 - this.state.barWH.w / 2) + "px"
         }
         else {
             this.canvasEl.style.left = (window.innerWidth / 2 - canWH.h / 2 + this.state.barWH.h / 2) + "px"

@@ -1,23 +1,26 @@
 import type { State } from "../scripts/State"
 // import { Redo } from "../scripts/tools/Redo"
-// import { Undo } from "../scripts/tools/Undo"
+import { Undo } from "../scripts/tools/Undo"
 import { SaveImg } from "../scripts/tools/SaveImg"
 import type { Canvas } from "./Canvas"
 import "../Styles.css"
+import type { CtxEvent } from "../scripts/CtxEvent"
 
 export class ToolsBar {
     parent: HTMLElement
     state: State
     ctx: CanvasRenderingContext2D | null
+    ctxEvent: CtxEvent
     brushOrEraserIcon: HTMLElement | null
     constructor(state: State, canvas: Canvas) {
         this.parent = document.createElement("div")
         this.state = state
         this.ctx = canvas.ctx
+        this.ctxEvent = canvas.ctxEvent
         this.brushOrEraserIcon = null
     }
 
-   create() {
+    create() {
         this.parent.classList.add("toolsBar-parent")
         this.parent.style.height = this.state.barWH.h + "px"
 
@@ -36,7 +39,7 @@ export class ToolsBar {
         const bckg = [this.state.brushCol, "green", "yellow", "purple"] // ex color
         const tools = ["brush/eraser", "undo", "redo", "saveImg"]
         if (!this.ctx) return
-        // const ctx = this.ctx
+        const ctx = this.ctx
 
         let isBrush = false
         for (let i = 0; i < tools.length; i++) {
@@ -58,8 +61,9 @@ export class ToolsBar {
                     }
                     isBrush = !isBrush
                 }
-                // if (tools[i] === "undo") new Undo(this.state, ctx)
+                if (tools[i] === "undo") new Undo(this.state, ctx, this.ctxEvent)
                 // if (tools[i] === "redo") new Redo(this.state, ctx)
+                if (tools[i] === "redo") console.log("redo")
                 if (tools[i] === "saveImg") new SaveImg(this.state)
             })
         }
